@@ -1,0 +1,17 @@
+1. produce a ssh key pair cmd:
+    ssh-keygen -t rsa -b 4096 -C "your_email@example.com", substitude "your_email@example.com" with any string you like, normally the user@web you are going to use the ssh key for.
+2. add your ssh key to ssh-agent, to ease the use of ssh key, cmd: (optional)
+    eval "$(ssh-agent -s)"
+    ssh-add ~/.ssh/id_rsa
+3. copy your public key. it will be add to github for safe communication between you and github, github can check if you have the private key related to the public you are going to stored on github. cmd:
+    cat ~/.ssh/id_rsa.pub
+    copy the output of the command above.
+4. add the public key to github
+    go to your git hub account ->setting->SSH and GPG keys-> new SSH key.
+    paste the key you copied in the last step to the "Key" field, give it a meaningful title.
+    press "Add SSH Key" button.
+5. check if it works, cmd:
+    ssh -T git@github.com
+    if you se the output like below, congratulations:
+    "Hi xxxx! You've successfully authenticated, but GitHub does not provide shell access."
+
