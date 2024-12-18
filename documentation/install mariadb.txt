@@ -1,0 +1,7 @@
+1. sudo apt-get update && install mariadb-server
+
+2. connect to mariadb
+    2.1 change user to root, cmd:
+        su
+    2.2 login to mariadb with root user, cmd:
+        mariadb -u root
