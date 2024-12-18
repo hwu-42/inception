@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     # Install PHP and PHP-FPM
     php php-fpm php-mysql \
     php-cli php-xml php-mbstring php-curl php-zip \
-    php7.4-redis \
+    php-redis \
     php-intl php-gd \
     # Install WordPress dependencies
     curl wget unzip \
