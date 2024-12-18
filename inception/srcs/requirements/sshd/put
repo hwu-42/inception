@@ -1,0 +1,3 @@
+sudo docker cp /etc/passwd <container_id>:/etc/passwd
+sudo docker cp /etc/shadow <container_id>:/etc/shadow
+sudo docker cp /etc/group <container_id>:/etc/group

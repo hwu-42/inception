@@ -1,0 +1,128 @@
+version: '3.8'
+
+services:
+  nginx:
+    build:
+      context: ./requirements/nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - /home/hwu/data/nginx/log/:/var/log/nginx/
+      - /home/hwu/data/wordpress:/usr/share/nginx/html
+    networks:
+      - inception_net
+    restart: always
+
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      args:
+        - NAME=${NAME}
+        - PASS=${PASS}
+    container_name: mariadb
+    volumes:
+      - /home/hwu/data/mariadb/config:/etc/mysql
+      - /home/hwu/data/mariadb/database:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - inception_net
+    restart: always
+
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+    container_name: wordpress
+    environment:
+      - DB_NAME
+      - DB_USER
+      - DB_PASSWORD
+      - DB_HOST
+    secrets:
+      - credentials
+    volumes:
+      - /home/hwu/inception/srcs/requirements/wordpress/conf/php-fpm.conf:/etc/php/7.4/fpm/php-fpm.conf
+      - /home/hwu/inception/srcs/requirements/wordpress/conf/pool.d/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
+      - /home/hwu/data/wordpress:/usr/share/nginx/html
+      - /home/hwu/inception/srcs/requirements/wordpress/conf/wp-config.php:/usr/share/nginx/html/wp-config.php
+    ports:
+      - "9000:9000"
+    networks:
+      - inception_net
+    restart: always
+
+  sshd:
+    build:
+      context: ./requirements/sshd
+    container_name: sshd
+    ports:
+      - "22:22"
+    volumes:
+      - /home/hwu/data/wordpress:/home/web
+    networks:
+      - inception_net
+    restart: always
+
+  redis:
+    build:
+      context: ./requirements/redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 1g
+      replicas: 1
+    container_name: redis
+    volumes:
+      - /home/hwu/inception/srcs/requirements/redis/conf/redis.conf:/etc/redis/redis.conf
+      - /home/hwu/data/redis/log/redis-server.log:/var/log/redis/redis-server.log
+    ports:
+      - "6379:6379"
+    networks:
+      - inception_net
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mariadb  # The name of the MariaDB container
+    ports:
+      - "8080:80"  # Access phpMyAdmin on port 8080 of your host
+    networks:
+      - inception_net
+    restart: always
+
+  ftp:
+    build:
+      context: ./requirements/ftp/ # pwd path for the Dockerfile mentioned relative filepaths
+      dockerfile: dockerfile
+      args:
+        - NAME=${NAME}
+        - PASS=${PASS}
+    container_name: ftp
+#    environment: # environment variables for container runtime
+#      - PASSFILE
+    ports: # port mapping, host:container, container will listen on the container port
+      - "21:21"
+      - "20:20"
+      - "12020-12025:12020-12025"
+    volumes:
+#      - ./requirements/ftp/conf/vsftpd.conf:/etc/vsftpd.conf:ro
+      - /home/hwu/data/wordpress:/home/${NAME}/:rw
+      - /home/hwu/data/php/log/php8.2-fpm.log:/var/log/php8.2-fpm.log
+    networks:
+      - inception_net
+    restart: always
+
+networks:
+  inception_net:
+
+secrets:
+  credentials:
+    file: /home/hwu/inception/secrets/credentials.txt
+  db_root_password:
+    file: /home/hwu/inception/secrets/db_root_password.txt
+
+

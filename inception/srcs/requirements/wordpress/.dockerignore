@@ -1,0 +1,13 @@
+# Ignore log files
+*.log
+
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore Dockerfiles themselves
+Dockerfile
+.dockerignore
+
+# Ignore specific tools folder (if not needed)
+tools/

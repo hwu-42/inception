@@ -1,0 +1,35 @@
+# Use Debian Bullseye as the base image
+FROM debian:bullseye
+
+# Set environment variables for non-interactive apt installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install OpenSSH server
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+    passwd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create the necessary directories for SSH
+RUN mkdir -p /var/run/sshd
+
+# Set up SSH configuration (optional: modify as needed)
+RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config \
+    && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config \
+    && echo "ForceCommand internal-sftp" >> /etc/ssh/sshd_config \
+    && echo "ChrootDirectory /home/%u" >> /etc/ssh/sshd_config \
+    && echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config \
+    && echo "Subsystem sftp internal-sftp" >> /etc/ssh/sshd_config
+
+# Expose SSH port (port 22 for SFTP)
+EXPOSE 22
+
+# Create a user with SSH and SFTP access (modify username and password as needed)
+RUN useradd -m -d /home/username -s /bin/bash username \
+    && echo "hwu:123456" | chpasswd
+
+# Start the SSH service (for SFTP) when the container runs
+CMD ["/usr/sbin/sshd", "-D"]
+
+
+docker run -d -p 22:22 -v /home/hwu/inception/srcs/requirements/ftp/conf/sshd_config:/etc/ssh/sshd_config --name sshtest ssh

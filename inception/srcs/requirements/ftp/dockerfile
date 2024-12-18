@@ -1,0 +1,43 @@
+
+
+
+# Use Debian Bullseye as the base image
+FROM debian:bullseye
+
+ARG NAME
+ARG PASS
+
+# Update the package list and install vsftpd
+RUN apt-get update && apt-get install -y \
+    vsftpd ftp\
+    && apt-get clean
+
+
+# Create a directory to store FTP files
+RUN mkdir -p /var/ftp/uploads /var/run/vsftpd/empty && \
+    chmod 755 /var/run/vsftpd/empty
+
+# Copy the conf file
+COPY ./conf/vsftpd2.conf /etc/vsftpd.conf
+RUN chmod 775 /etc/vsftpd.conf
+
+    
+# Create a new FTP user and set a password
+RUN useradd -m ${NAME} && \
+    echo "${NAME}:${PASS}" | chpasswd
+
+
+
+# Set proper permissions for the FTP directory
+#RUN chown ${NAME}:${NAME} /var/ftp/uploads
+
+#USER ${NAME}
+
+# Copy the vsftpd configuration file into the container
+#COPY conf/vsftpd.conf /etc/vsftpd.conf
+
+# Expose FTP port
+EXPOSE 21 20 12020-12025
+
+# Start vsftpd in the foreground
+CMD ["/usr/sbin/vsftpd", "/etc/vsftpd.conf"]

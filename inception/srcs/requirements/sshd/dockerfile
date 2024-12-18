@@ -1,0 +1,28 @@
+# Use Debian Bullseye as the base image
+FROM debian:bullseye
+
+# Set environment variables for non-interactive apt installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install OpenSSH server and any required dependencies
+RUN apt-get update && apt-get install -y \
+    openssh-server \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create the necessary directories for SSH
+RUN mkdir -p /var/run/sshd
+
+# Set up SSH configuration (optional: modify as needed)
+# Here we are ensuring that SSH uses password authentication
+RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \
+    && echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+
+# Expose SSH port 22
+EXPOSE 22
+
+# Create a user (optional, you can modify the username and password)
+RUN useradd -m -d /home/web -s /bin/bash web \
+    && echo "web:123" | chpasswd
+
+# Start the SSH daemon when the container runs
+CMD ["/usr/sbin/sshd", "-D"]

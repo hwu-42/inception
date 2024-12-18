@@ -1,0 +1,40 @@
+# Use Debian Bullseye as base image
+FROM debian:bullseye
+
+# Set DEBIAN_FRONTEND to noninteractive to avoid debconf prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    # Install PHP and PHP-FPM
+    php php-fpm php-mysql \
+    php-cli php-xml php-mbstring php-curl php-zip \
+    php7.4-redis \
+    php-intl php-gd \
+    # Install WordPress dependencies
+    curl wget unzip \
+    # Clean up
+    && rm -rf /var/lib/apt/lists/*
+
+# Set PHP-FPM to use a non-root user (for security)
+RUN sed -i 's/^user = www-data/user = www-data/' /etc/php/7.4/fpm/pool.d/www.conf && \
+    sed -i 's/^group = www-data/group = www-data/' /etc/php/7.4/fpm/pool.d/www.conf
+
+# Ensure the socket directory exists
+RUN mkdir -p /run/php && chown -R www-data:www-data /run/php
+
+# Install WordPress
+#RUN mkdir -p /var/www && \
+#    curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
+#    tar -xvzf /tmp/wordpress.tar.gz -C /var/www/ && \
+#    mv /var/www/wordpress /var/www/html && \
+#    chown -R www-data:www-data /var/www/html
+
+# Configure PHP-FPM for WordPress
+RUN echo "cgi.fix_pathinfo=0" >> /etc/php/7.4/fpm/php.ini
+
+# Expose necessary port for PHP-FPM
+EXPOSE 9000
+
+# Command to start PHP-FPM (no Nginx involved)
+CMD ["php-fpm7.4", "-F"]

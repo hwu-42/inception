@@ -1,0 +1,41 @@
+1. download the ISO file of a OS, windows, mac, linux etc
+    here we use debian from https://www.debian.org/, as it is free and powerful.
+    here you get file: debian-xx.xx.xx-amd64-netinst.iso    e.g.:debian-12.8.0-amd64-netinst.iso   
+    normmal choose amd64 ver, google if you are not sure what it is about
+    netinst: means net Installation, you need to ensure the accessment to internet.
+
+2. create a debian virtual machine, virtualbox -> Machine -> New
+    2.1
+        Name        : an string, any thing you want.
+        Folder      : the directory where you want to store the debian image file.
+        ISO Image   : the IOS file you download in the step 1.
+        **for new users, don't tick "Skip Unattended Installation", it is for advanced tailorred Installation.
+        next ->
+    2.2
+        Username    : string you like, it is for the OS user login when you start the virtual machine.
+        Hostname    : the name of the pc, the name you want other to see in the LAN.
+        Domain Name : it doesn't matter
+        **Guest Addition, if you will share the virtual with others, create a user for him. Or you can create a user later whenever necessary
+        next ->
+    2.3 
+        Base Memory : the RAM memory size for the virtual machine, depends on what you want to do in the virtual machine.
+            **don't take all of the physical memory you have on your host, your host need some to be functional.
+        Prcessors   : normmally you have more than one core in your CPU, here you allocate several to the virtual machine.
+            **again, don't take all!
+        **Enable EFI, don't tick it if you don't know what it is, google it.
+        next->
+    2.4
+        Create a Virtual Hard Disk Now: it is the HDD size of the virtual machine. 
+        ***Pre-allocate Full Size: recommanded to tick it, it will make the virtual machine usable no matter is your physical HDD is full or not,
+            because the disk is reserved. otherwise if your HDD became full, your virtual machine will frequently fail for I/O error, 
+            e.g. it try to write to HDD, but it's full.
+        next->
+        *USE a existing virtual hard drive file
+        *Do not add a virtual hard disk
+        *if you choose above 2, it means you don't need this document anymore ;)
+    2.5
+        last check
+        Finish-> VirtualBox will create necessary virtual hardwares. then you can start the virtual machine to finish the OS Installation.
+3. install OS in the virtual machine
+
+    

@@ -1,0 +1,30 @@
+FROM debian:bullseye
+
+# Set DEBIAN_FRONTEND to noninteractive to avoid debconf prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+ARG NAME
+ARG PASS
+
+# Install MariaDB and dependencies
+RUN apt-get update && apt-get install -y apt-utils \
+    && apt-get install -y mariadb-server \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo ${NAME} ${PASS} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacd
+
+# Create a mysql user and group
+RUN useradd -m ${NAME} && echo "${NAME}:${PASS}" | chpasswd
+RUN echo "root:${PASS}" | chpasswd
+
+# Set proper permissions
+RUN mkdir -p /run/mysqld && chown ${NAME}:${NAME} /run/mysqld
+RUN chown -R ${NAME}:${NAME} /var/lib/mysql
+
+USER ${NAME}
+
+# Expose the default MariaDB port
+EXPOSE 3306
+
+# Default command to start MariaDB
+CMD ["mysqld"]

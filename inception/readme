@@ -1,0 +1,89 @@
+https://mariadb.com/download-confirmation?group-name=Community%20Server&release-notes-uri=https%3A%2F%2Fmariadb.com%2Fkb%2Fen%2Fmariadb-10-11-10-release-notes%2F&download-uri=https%3A%2F%2Fdlm.mariadb.com%2F3945294%2FMariaDB%2Fmariadb-10.11.10%2Frepo%2Fdebian%2Fmariadb-10.11.10-debian-bullseye-amd64-debs.tar&product-name=Community%20Server&download-size=64.25%20MB
+
+my business plan, 
+trusted payment, trusted good source, credit system, trusted logistic info,
+value added service: branding, marketing, customer service, insurance, warranty, return policy,
+financial service: credit, loan, investment, saving, insurance, tax, accounting, payment gateway, escrow,
+business service: legal, consulting, training, research, logistic, warehouse, repair, maintenance, installation, event, catering,
+consulting service: business, investment, financial, management, marketing, logistic, legal, tax, accounting, training, research,
+infrastructure service: cloud, server, storage, network, CDN, security, database, backup, disaster recovery, PaaS, SaaS, IaaS,
+training service: school, course, certification, skill, job, tutor, online, offline, video, material, assignment, test, book, content,
+
+trusted payment:fund is not mandated to third party, in stead, it is saved on the web3.0, fully person credit isolated.
+
+
+https://localhost:443/secretgarden
+
+
+mariadb **********************
+
+container files only exist in container, if container is removed, all the data produced during the running of the container is lost. and containers themself is meant to be ephemeral. so we need to find way to make the important data persistent.
+
+steps to create mariadb service container with consistency:
+    1. prepare dockerfile
+        1.1 build from debian:bullseye(a stable version of debian)
+            debian:bullseye is available on docker hub, it will be automatically pulled if it is not on docker local image lib
+        1.2 install mariadb-server and dependency
+        1.3 create a user to run mariadb in the container
+    2. build the mariadb service image
+        2.1 CD into the folder where the dockerfile is saved
+        2.2 docker build -t <tag> .
+            the '.' at the end means the pwd, docker will automatically try to find the dockerfile
+    3. create container and run mariadb service in the container
+        3.1 run the cmd:docker run -d -p 3306:3306 --name mariadb mariaimg
+            this will createt the container and run it, if success you can see it with cmd:docker ps
+    4. get inside the container, and make configurations
+        4.1 enable mariadb to listen on 0.0.0.0; refer to *1
+        4.2 create a user for mariadb (optional)
+            4.2.1 change user to root cmd: su; password is set in dockerfile, this is for security purpose.
+            4.2.2 login to mariadb cmd: mariadb -u root; default setting of mariadb, root can login without password on host machine (here the host machine is the container)
+            4.2.3 create new user; refer to *2
+    5. stop the container
+        cmd: docker stop <container_name>
+    6. copy the files which is important for mariadb, cmd: docker cp <container_name>:<folder in container> <folder on host>
+        configurationg file folder:
+                /etc/mysql
+        database folder:
+            /var/lib/mysql
+    7. consistency
+        then you can use the mariadb config and database files copied in stpe6 in any container, and ensuring the consistency of your mariadb database.
+        if you mount these two folder(the 2 folder you cp the files to in step6) when creating new containers, 
+        cmd: docker run -d -p 3306:3306 --name mariadb -v <config_folder>:/etc/mysql -v <database_folder>:/var/lib/mysql mariaimg
+
+
+*1 : to enable mariadb listening to request from other host 
+    comment "bind-address" directive in /etc/mysql/mariadb.conf.d/50-server.cnf
+    like this:
+    #bind-address            = 127.0.0.1
+
+*2 : mariadb commands
+    CREATE USER 'forwordpress'@'%' IDENTIFIED BY '123'
+        '%' means the user can from anyhost, you can choose 'localhost' to restict the login on the local machine,  "'" is necessary,
+
+    SELECT user, host, plugin FROM mysql.user;
+
+cmd to run a container for mariadb
+    docker run -d -p 3306:3306 --name mariadb -v /home/hwu/data/mariadb/config:/etc/mysql -v /home/hwu/data/mariadb/database:/var/lib/mysql mariaimg
+
+normal config files
+drwxr-xr-x 2 root root 4096 Dec 13 15:49 conf.d
+-rwxr-xr-x 1 root root 1731 Sep  7 22:07 debian-start
+-rw------- 1 root root  544 Dec 13 15:49 debian.cnf
+-rw-r--r-- 1 root root 1126 Sep  7 22:07 mariadb.cnf
+drwxr-xr-x 2 root root 4096 Dec 13 15:49 mariadb.conf.d
+lrwxrwxrwx 1 root root   24 Dec 13 15:49 my.cnf -> /etc/alternatives/my.cnf
+-rw-r--r-- 1 root root  839 Feb  8  2021 my.cnf.fallback
+
+-rw-r--r-- 1 root root  575 Sep  7 22:07 50-client.cnf
+-rw-r--r-- 1 root root  231 Sep  7 22:07 50-mysql-clients.cnf
+-rw-r--r-- 1 root root  927 Sep  7 22:07 50-mysqld_safe.cnf
+-rw-r--r-- 1 root root 3666 Sep  7 22:07 50-server.cnf
+-rw-r--r-- 1 root root  570 Sep  7 22:07 60-galera.cnf
+
+
+to create database for wordpress:
+CREATE DATABASE wordpress CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'wp_user'@'%' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wp_user'@'%';
+FLUSH PRIVILEGES;
+fsdfdsdsfdfssdf ds fsd
