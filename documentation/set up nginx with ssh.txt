@@ -52,5 +52,7 @@
         *************************************************
 9. update you nginx.conf to serve different function in your website, no config, no work!
 
+nginx default www file directory:
+    /usr/share/nginx/html
 
 
