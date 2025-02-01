@@ -1,0 +1,27 @@
+1. got to your project file, cmd:
+    cd /path/to/your/project
+2. init git, cmd:
+    git init
+3. add file to git, cmd:
+    git add .
+4. commit the git stage, cmd:
+    git commit -m "meaning descriptive string you like"
+5. create a new repository in your git hub, copy the ssh address of it:
+    your-git-hub-prject -> Code -> local SSH
+    copy it, i looks like: git@github.com:<username>/<repository>.git
+
+6. connect your local repository to git hub repository, cmd:
+    git remote add origin git@github.com:<username>/<repository>.git
+
+7. to use visual studio code with github, set default user for github, cmd:
+    git config --global user.email "xxxxxxxxxxxxx@xx.xx"
+    git config --global user.name "Your Name"
+    above, it refer to github user.
+
+8. push your local files to git hub repository, cmd:
+    git push -u origin master
+    if you use vscode, then git -> commit then -> sync.
+    
+**before step 2, you can create a .gitignore file to specify which file you don't want to push to git hub, cmd:
+    touch .gitignore
+    then you can add file name you want git to ignore into .gitignore, wild card is suppoted by .gitignore.

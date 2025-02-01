@@ -1,0 +1,4 @@
+1. install php-fpm and tools, cmd:
+    su
+    apt-get update && apt-get install -y php php-fpm php-mysql php-cli php-xml php-mbstring php-curl php-zip php-redis php-intl php-gd
+    #apt-get update && apt-get install -y php-fpm php-mysql php-redis

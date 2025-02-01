@@ -1,0 +1,19 @@
+1. sudo apt-get update && install mariadb-server
+
+2. connect to mariadb
+    2.1 change user to root, cmd:
+        su
+    2.2 login to mariadb with root user, cmd:
+        mariadb -u root
+
+
+
+**
+    SELECT User FROM mysql.user;
+    SHOW DATABASES;
+    SHOW TABLES;
+    
+    CREATE DATABASE wordpress;
+    CREATE USER 'secret'@'%' IDENTIFIED BY '123';
+    GRANT ALL PRIVILEGES ON wordpress.* TO 'secret'@'%';
+    FLUSH PRIVILEGES;

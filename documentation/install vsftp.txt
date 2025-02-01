@@ -1,0 +1,12 @@
+1. install vsftpd server, cmd:
+    sudo apt-get update && sudo apt-get inastall vsfptd
+2. config the passive mode for better data transportation, cmd:
+    2.1 open config file, cmd:
+        sudo nano /etc/vsfptd.conf
+    2.2 add passive mode setting, add the following directives to vsftpd.conf:
+        pasv_enable=YES
+        pasv_min_port=10000
+        pasv_max_port=10100
+        pasv_address=127.0.0.1
+        **  10000-10100: port for ftp to use for file transportation, you can choose other range.
+            pasv-address is the public ip, by which other host can reach your ftp server

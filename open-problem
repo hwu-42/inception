@@ -1,0 +1,5 @@
+1. consider to use sed to update conf files, in stead of use fixed conf, as the version of php may change we installing php via apt-get install:
+  Network settings: Set listen = 0.0.0.0:9000 in www.conf for TCP socket.
+  User/group settings: Ensure PHP-FPM runs under the appropriate user/group.
+  Logging settings: Redirect logs to stdout or stderr for easier container log access.
+  Health checks: Optional, but useful to ensure the service is running properly.

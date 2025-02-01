@@ -1,0 +1,29 @@
+0. install ssh, cmd:
+    sudo apt-get update && sudo apt-get install openssh-server openssh-client
+
+1. produce a ssh key pair cmd:
+    1.1 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+    (substitude "your_email@example.com" with any string you like, normally the user@web you are going to use the ssh key for.
+    2 files will be produced at you present working folder, one end with .pub, this is the public key, the other one is the private key)
+    1.2 move these two file to folder: /home/<user_name>/.ssh/
+
+2. add your ssh key to ssh-agent, to ease the use of ssh key, cmd: (optional)
+    eval "$(ssh-agent -s)"
+    ssh-add </path/to/private_key_file_name>
+
+3. copy your public key. it will be add to github for safe communication between you and github, github can check if you have the private key related to the public you are going to stored on github. cmd:
+    cat ~/.ssh/id_rsa.pub
+    copy the output of the command above.
+
+4. add the public key to github
+    go to your git hub account ->setting->SSH and GPG keys-> new SSH key.
+    paste the key you copied in the last step to the "Key" field, give it a meaningful title.
+    press "Add SSH Key" button.
+
+5. check if it works, cmd:
+    ssh -T git@github.com
+    if you se the output like below, congratulations:
+    "Hi xxxx! You've successfully authenticated, but GitHub does not provide shell access."
+
+**if you want to use the ssh connectionn in VScode, maybe you need to add the key again in VScode terminal: stap 2. i don't know y.
+

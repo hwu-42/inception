@@ -1,0 +1,12 @@
+1. to check the  running user of a container:
+    docker run --rm --entrypoint id wordpress:latest www-data
+
+2. change the uid and gid of a user (to align the owner of the file on host to the user running a container)
+    sudo usermod -u <container-uid> username
+    sudo groupmod -g <container-gid> username
+    
+3. change owner of a file:
+    sudo chown -R www-data:www-data /path/to/your/host/directory
+
+
+

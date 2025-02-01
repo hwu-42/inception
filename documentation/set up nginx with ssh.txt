@@ -1,0 +1,63 @@
+1. install ssh, cmd:
+    apt-get update && apt-get install openssl -y
+2. install nginx, cmd:
+    apt-get update && apt-get install nginx -y
+3. produce ssh .cert and .key file, which is used to facilitate https communication, cmd:
+    3.1 produce a key, cmd:
+        openssl genrsa -out <name_you_choose>.key 2048
+    3.2 produce a csr, this include your web information,cmd:
+        openssl req -new -key test.key -out <name_you_choose>.csr
+        
+        You’ll be prompted to enter some information:
+        Country Name (e.g., US)
+        State or Province Name (e.g., California)
+        Locality Name (e.g., San Francisco)
+        Organization Name (e.g., My Test Org)
+        Organizational Unit Name (e.g., IT)
+        Common Name (e.g., localhost for local testing or a domain like example.com)
+    3.3 Create a Self-Signed Certificate, cmd:
+        openssl x509 -req -days 365 -in test.csr -signkey test.key -out <name_you_choose>.crt
+        *after the .crt file is produced, the csr file is not useful anymore, you can delete it.
+4. move the .crt and .key file to folder, /etc/nginx/ssl/, cmd:
+    sudo mkdir /etc/nginx/ssl
+    sudo cp <name_you_choose>.key <name_you_choose>.crt /etc/nginx/ssl
+    rm <name_you_choose>.key <name_you_choose>.crt <name_you_choose>.csr
+5. config the nginx.conf file to make it work properly, the file locate at: /etc/nginx/nginx.conf
+    refer to official web:https://docs.nginx.com/nginx/admin-guide/web-server/web-server/
+    or find a better tutorial about how to make proper configuration of nginx.
+6. test if your nginx.conf is correct, this is important, as you can see clearly which config is not correct, cmd:
+    sudo nginx -t
+7. restart your nginx engine, and check the status cmd:
+    sudo systemctl restart nginx && systemctl status nginx
+8. open a internet browser, check if it works:
+    you may see info:
+        ******************************************
+        Your connection is not private
+        Attackers might be trying to steal your information from 127.0.0.1 (for example, passwords, messages, or credit cards). Learn more about this warning
+        net::ERR_CERT_AUTHORITY_INVALID
+        Turn on enhanced protection to get Chrome's highest level of security
+        ******************************************
+        this is normal, because, most browsers only treat a license as safe when it is issued by a license provide, you have to pay for it.
+        your Certificate is one produced for self usage only.
+    click "advance" on the page -> proceed to xx.xx.xx.xx(unsafe), noworry, it is yourself, so safe.
+    if you see the following page, congratulations, done:
+        *************************************************
+        Welcome to nginx!
+        If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+
+        For online documentation and support please refer to nginx.org.
+        Commercial support is available at nginx.com.
+
+        Thank you for using nginx.
+        *************************************************
+9. update you nginx.conf to serve different function in your website, no config, no work!
+
+nginx default www file directory:
+    /usr/share/nginx/html
+
+** in /etc/nginx/nginx.conf comment the 2 line below, as the configuration in these files may overwrite the configuration in the /etc/nginx/nginx.conf.
+    these files is also configuration for ngins servers, and basicly useful if you are serving more than one web. these file are not really necessary, you can put
+    every thing into /etc/nginx/nginx.conf, but put them in different file can make the management of servers more flexible.
+        include /etc/nginx/conf.d/*.conf;
+        include /etc/nginx/sites-enabled/*;
+
