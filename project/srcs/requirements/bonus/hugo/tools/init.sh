@@ -959,3 +959,13 @@ hugo server \
     --ignoreCache \
     --verbose \
     --gc
+
+
+# For production:
+# DOMAIN_NAME="example.com"
+
+# # Clean up old files and generate a fresh build
+# hugo --gc --minify --baseURL="https://hugo.${DOMAIN_NAME}"
+
+# # Ensure Nginx serves the latest files (modify the path if needed)
+# sudo systemctl reload nginx
