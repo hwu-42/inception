@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MYSQL_PASSWORD=$(cat /run/secrets/mysql_password)
-MYSQL_ROOT_PASSWORD=$(cat /run/secrets/mysql_root_password)
+
 chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 chmod 777 /var/run/mysqld
 

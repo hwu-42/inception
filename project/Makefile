@@ -26,9 +26,7 @@ clean:
 fclean: clean
 	@docker system prune -af
 	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
-	@sudo rm -rf /home/hwu/data/wordpress/*
-	@sudo rm -rf /home/hwu/data/mariadb/*
-	@sudo rm -rf /home/hwu/data/hugo/*
+	@sudo rm -rf /home/hwu/data
 	@docker network prune -f
 
 rebuild:

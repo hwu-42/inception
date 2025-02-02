@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  bash:
+    build:
+      context: bash
+      args:
+        MY_ARG: "Hello from Docker Compose value"
+    container_name: bash
+    env_file:
+      - .env
+    stdin_open: true  # Keeps the container running and allows interactive mode
+    tty: true

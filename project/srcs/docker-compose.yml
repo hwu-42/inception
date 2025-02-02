@@ -37,10 +37,7 @@ services:
       - .env
     secrets:
       - mysql_password
-      - credentials
-    environment:
-      - WORDPRESS_DB_PASSWORD_FILE=/run/secrets/mysql_password
-      - WP_ADMIN_PASSWORD_FILE=/run/secrets/credentials
+      - adminpass
     networks:
       - inception_network
     restart: always
@@ -60,10 +57,6 @@ services:
      - .env
     secrets:
       - mysql_password
-      - mysql_root_password
-    environment:
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
-      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
     networks:
       - inception_network
     restart: always
@@ -130,8 +123,6 @@ services:
      - .env
     secrets:
       - ftp_password
-    environment:
-      - FTP_PASS=/run/secrets/ftp_password
     networks:
       - inception_network
     restart: always
@@ -150,8 +141,6 @@ services:
       - hugo_data:/var/www/hugo
     networks:
       - inception_network
-    environment:
-      - DOMAIN_NAME=${DOMAIN_NAME}
     restart: always
     ports:
       - "1313:1313"
@@ -193,12 +182,10 @@ volumes:
 secrets:
   mysql_password:
     file: ../secrets/db_password.txt
-  mysql_root_password:
-    file: ../secrets/db_root_password.txt
   ftp_password:
     file: ../secrets/ftp_password.txt
-  credentials:
-    file: ../secrets/credentials.txt
+  adminpass:
+    file: ../secrets/adminpass.txt
 
 networks:
   inception_network:

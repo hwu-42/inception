@@ -13,12 +13,13 @@ sleep 10
 if ! wp core is-installed --path=/var/www/html --allow-root; then
     echo "Installing WordPress..."
     
+    
     # Install WordPress core
     wp core install \
         --url="https://${DOMAIN_NAME}" \
         --title="Inception" \
         --admin_user="${WP_ADMIN_USER}" \
-        --admin_password="$(cat /run/secrets/credentials)" \
+        --admin_password="$(cat /run/secrets/adminpass)" \
         --admin_email="${WP_ADMIN_EMAIL}" \
         --skip-email \
         --path=/var/www/html \
@@ -27,7 +28,7 @@ if ! wp core is-installed --path=/var/www/html --allow-root; then
     echo "WordPress core installation completed!"
 else
     echo "WordPress already installed, updating admin password..."
-    wp user update ${WP_ADMIN_USER} --user_pass="$(cat /run/secrets/credentials)" --allow-root
+    wp user update ${WP_ADMIN_USER} --user_pass="$(cat /run/secrets/adminpass)" --allow-root
 fi
 
 if ! wp plugin is-installed redis-cache --allow-root; then

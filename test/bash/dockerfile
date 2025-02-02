@@ -1,0 +1,10 @@
+FROM debian:bullseye
+# ARG MY_ARG=docker_value
+ARG MY_ARG
+
+
+RUN echo $aaa
+
+RUN echo $MY_ARG
+
+CMD ["bash"]
