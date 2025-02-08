@@ -1,9 +1,35 @@
 NAME= inception
 
-all: prepare $(NAME)
+
+# Makefile to set the correct pasv_address in vsftpd.conf and run docker-compose
+
+# Define the path to the vsftpd.conf file inside the container
+VSFTPD_CONF_PATH=srcs/requirements/bonus/ftp/conf/vsftpd.conf
+ENV_PATH=srcs/.env
+
+# Get the host machine IP (use the method you want for getting the IP)
+HOST_IP := $(shell hostname -I | awk '{print $$1}')
+
+#all: update_vsftpd_conf prepare $(NAME)
+all: update_host_IP
+
+# Update the vsftpd.conf file with the correct host IP
+update_host_IP:
+	@if grep -q "^pasv_address=" $(VSFTPD_CONF_PATH); then \
+		sed -i "s/^pasv_address=.*/pasv_address=$(HOST_IP)/" $(VSFTPD_CONF_PATH); \
+	else \
+		echo "\npasv_address=$(HOST_IP)" >> $(VSFTPD_CONF_PATH); \
+	fi
+	@if grep -q "^DOMAIN_IP=" $(ENV_PATH); then \
+		sed -i "s/^DOMAIN_IP=.*/DOMAIN_IP=$(HOST_IP)/" $(ENV_PATH); \
+	else \
+		echo "\nDOMAIN_IP=$(HOST_IP)" >> $(ENV_PATH); \
+	fi
+
+
 
 prepare:
-	@mkdir -p /home/hwu/data/wordpress
+	mkdir -p /home/hwu/data/wordpress
 	@mkdir -p /home/hwu/data/mariadb
 	@mkdir -p /home/hwu/data/hugo
 	@sudo chmod 777 /home/hwu/data/hugo

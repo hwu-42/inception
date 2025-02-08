@@ -8,6 +8,7 @@ else
     exit 1
 fi
 
+
 # Create FTP user
 echo "Creating FTP user ${FTP_USER}..."
 adduser --disabled-password --gecos "" "${FTP_USER}"
@@ -22,5 +23,7 @@ chmod -R 775 /var/www/html
 echo "FTP Server is starting..."
 echo "User ${FTP_USER} is configured."
 echo "Root directory is /var/www/html"
+
+
 
 exec vsftpd /etc/vsftpd.conf
