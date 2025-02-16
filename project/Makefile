@@ -10,8 +10,8 @@ ENV_PATH=srcs/.env
 # Get the host machine IP (use the method you want for getting the IP)
 HOST_IP := $(shell hostname -I | awk '{print $$1}')
 
-#all: update_vsftpd_conf prepare $(NAME)
-all: update_host_IP
+all: update_host_IP prepare $(NAME)
+#all: update_host_IP
 
 # Update the vsftpd.conf file with the correct host IP
 update_host_IP:

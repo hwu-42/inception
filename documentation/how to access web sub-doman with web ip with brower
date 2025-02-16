@@ -1,0 +1,4 @@
+add a entry in /etc/hosts, so it works kind of like a private DNS
+ip of the host  domain/sub-domain name of the website
+e.g.:
+10.12.200.131   hugo.hwu.42.fr

@@ -1,6 +1,6 @@
 <?php
 if (!defined('WP_HOME')) {
-    define('WP_HOME', 'https://' . getenv('DOMAIN_NAME'));
+    define('WP_HOME', 'https://' . getenv('DOMAIN_IP'));
 }
 if (!defined('WP_SITEURL')) {
     define('WP_SITEURL', WP_HOME);
