@@ -14,10 +14,10 @@ if [ ! -d "/var/www/hugo/site" ]; then
    git submodule update --init --recursive
    git submodule update --remote --merge
 
-   if [ ! -d "themes/paper" ]; then
-       echo "Error: Theme installation failed"
-       exit 1
-   fi
+   # if [ ! -d "themes/paper" ]; then
+   #     echo "Error: Theme installation failed"
+   #     exit 1
+   # fi
 
    mkdir -p static/images
 
@@ -916,7 +916,7 @@ else
 fi
 
 hugo server \
-    --bind=0.0.0.0 \
+    --server-bind=0.0.0.0 \
     --port=1313 \
     --baseURL="https://hugo.${DOMAIN_NAME}" \
     --appendPort=false \
