@@ -17,12 +17,10 @@ WORKDIR /var/www/hugo
 
 RUN rm -rf site
 
-RUN echo hugo version is ...... && hugo version
 
 COPY tools/init.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/init.sh
 
-COPY tools/static/images/* /tmp/
 
 EXPOSE 1313
 
