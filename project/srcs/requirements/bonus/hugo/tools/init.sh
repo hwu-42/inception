@@ -887,7 +887,7 @@ else
    cd site || exit
 fi
 
-hugo server \
+hugo --verbose > /var/www/hugo/logs.txt 2>&1 server \
     --bind=0.0.0.0 \
     --port=1313 \
     --baseURL="https://hugo.${DOMAIN_NAME}" \

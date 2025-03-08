@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   nginx:
     build:
@@ -11,7 +9,7 @@ services:
       - "443:443"
     volumes:
       - wordpress_data:/var/www/html
-      - nginx_logs:/var/log/nginx
+      - /home/data/nginx:/var/log/nginx
       - ssh_logs:/var/log
     env_file:
       - .env
