@@ -4,28 +4,12 @@
 if [ ! -d "/var/www/hugo/site" ]; then
    hugo new site site
    cd site || exit
-   # git init
-   # git config --global --add safe.directory /var/www/hugo/site
-
-   # git submodule add https://github.com/nanxiaobei/hugo-paper.git themes/paper
-   # git submodule init
-   # git submodule update --init --recursive
-   # git submodule update --remote --merge
-
-   # if [ ! -d "themes/paper" ]; then
-   #     echo "Error: Theme installation failed"
-   #     exit 1
-   # fi
-
    mkdir -p static/images
-
    rm -rf content/containers/_index.md
    rm -rf content/security/_index.md
    rm -rf content/posts/_index.md
    mkdir -p content/{containers/{nginx,wordpress,mariadb},security/{fail2ban,ssl,docker,wordpress}}
    touch content/_index.md
-
-      # Update the Quick Navigation section
 
 
    ls -R content/
@@ -46,59 +30,48 @@ git init && git submodule add https://github.com/adityatelange/hugo-PaperMod.git
 
 
 cat > hugo.toml <<EOL
+# Hugo configuration file
+# General settings
 baseURL = 'https://hugo.${DOMAIN_NAME}'
-languageCode = 'en-us'
-title = 'Inception'
-theme = 'paper'
+languageCode = "en-us"
+title = "My website"
+theme = "paper"
 
-[params]
-  # Theme appearance
-  color = 'gray'
-  avatar = '/images/42logo.png'
-  name = 'Inception Project Documentation'
-  bio = 'Docker Infrastructure Setup with Security Measures'
-  
-  # Theme behavior
-  defaultTheme = "dark"
-  monoDarkIcon = true
-  showDate = true
-  showFullContent = true
-  mainSections = ["containers", "security"]
-  showBreadcrumbs = true
-  
-  # Social links
-  github = 'hwu-42'
+# Metadata
+author = "huidong"
+description = "This is where you can find my public info."
+copyright = "2025, huidong"
 
-# 吴会栋
-# Huidong Wu
-### age:    in my golden age ;)
-### gender: MALE!!!
-### belief: Life should be interesting, work either, if what you can offer is boring, leave me alone, pleeeeeeaze!
-## [42 profile](https://profile.intra.42.fr/users/hwu)
-## [github page](https://github.com/hwu-42)
+# Enable or disable specific features
+disableKinds = ["taxonomy", "taxonomyTerm"]
 
-![](https://cdn.intra.42.fr/users/e997caa75bf44b5ec119e768a1d28060/hwu.JPG)
+# Permalinks settings
+[permalinks]
+    post = "/:year/:month/:day/:slug/"
 
-# [menu]
-#   [[menu.main]]
-#     name = "Home"
-#     url = "/"
-#     weight = 1
-#   [[menu.main]]
-#     name = "Containers"
-#     url = "/containers/"
-#     weight = 2
-#   [[menu.main]]
-#     name = "Security"
-#     url = "/security/"
-#     weight = 3
+# Taxonomies
+[taxonomies]
+    tag = "tags"
+    category = "categories"
 
-[markup.goldmark.renderer]
-  unsafe = true
+# Hugo server settings
+[server]
+    port = 1313
+    baseURL = "http://localhost:1313/"
 
-[outputs]
-  home = ["HTML", "RSS"]
-  section = ["HTML", "RSS", "JSON"]
+# Outputs (default is HTML)
+[outputFormats]
+    [outputFormats.HTML]
+    mediaType = "text/html"
+    isPlainText = false
+
+# Menu settings
+[[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+
 EOL
 
 
